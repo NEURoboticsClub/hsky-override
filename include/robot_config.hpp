@@ -7,6 +7,8 @@
 #include "hskylib.h"
 
 extern HskyController controller;
+extern HolonomicDrive drive;
+extern pros::MotorGroup leftFrontMotorGroup;
 
 void opcontrolInit();
 void robotInit();

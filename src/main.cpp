@@ -60,7 +60,7 @@ void opcontrol() {
 	controller.initialize();
 
 	while (true) {
-
+		drive.driveRobotCentric(controller.AxisLeftY.position(), controller.AxisLeftX.position(), -controller.AxisRightX.position());
 		pros::delay(20);
 	}
 }

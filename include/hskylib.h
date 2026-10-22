@@ -10,6 +10,7 @@
 #include "hskylib/subsystems/odometry/odometry.h"
 #include "hskylib/subsystems/pneumatics.h"
 #include "hskylib/subsystems/tank_drive.h"
+#include "hskylib/subsystems/holonomic_drive.h"
 #include "hskylib/subsystems/transport.h"
 
 // Utils
