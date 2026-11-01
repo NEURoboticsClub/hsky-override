@@ -37,8 +37,12 @@ pros::MotorGroup leftBackMotorGroup({10, -9});
 pros::MotorGroup rightFrontMotorGroup({-11, 12});
 pros::MotorGroup rightBackMotorGroup({-1, 2});
 
+pros::IMU imu(1); // Find the actual port
+
 //==================== SUBSYSTEMS ====================
 HolonomicDrive drive(leftFrontMotorGroup, leftBackMotorGroup, rightFrontMotorGroup, rightBackMotorGroup, pros::E_MOTOR_BRAKE_COAST, pros::E_MOTOR_GEAR_600, 1.0, 1.0);
+HolonomicOdometry odom(&leftFrontMotorGroup, &leftBackMotorGroup, &rightFrontMotorGroup, &rightBackMotorGroup, &imu, 
+    robotSpecs.driveWheelDiameter, robotSpecs.odomGearRatio, robotSpecs.trackWidth);
 // Add odom here
 
 //---------------------------------------------------
@@ -57,7 +61,13 @@ HolonomicDrive drive(leftFrontMotorGroup, leftBackMotorGroup, rightFrontMotorGro
 
 //====================== UTILS ======================
 
-void deviceInit() {}
+void deviceInit() {
+    pros::delay(1000);	// Allow time for devices to initialize
+	odom.reset();
+	odom.init();
+
+    imu.reset(true);
+}
 
 void opcontrolInit() {}
 
