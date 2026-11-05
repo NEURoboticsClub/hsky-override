@@ -61,6 +61,8 @@ void opcontrol() {
 
 	while (true) {
 		drive.driveRobotCentric(controller.AxisLeftY.position(), controller.AxisLeftX.position(), -controller.AxisRightX.position());
+
+		std::cout << "-------" << std::endl;
 		pros::delay(20);
 	}
 }
