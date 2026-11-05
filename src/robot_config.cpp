@@ -7,6 +7,12 @@
 #include "pros/adi.hpp"
 #include "pros/motors.h"
 
+std::queue<Command *> commandQueue;
+// std::optional<pose_t> startPose;
+// bool isAutonomousRunning = false;
+// pros::Task* failsafeTask = nullptr;
+CommandRunner* activeCommandRunner = nullptr;
+
 #define ROBOT_1
 
 HskyController controller(pros::E_CONTROLLER_MASTER);
@@ -61,6 +67,13 @@ HolonomicOdometry odom(&leftFrontMotorGroup, &leftBackMotorGroup, &rightFrontMot
 
 //====================== UTILS ======================
 
+void populateAutonQueue() {
+    // Test auton
+    commandQueue = std::queue<Command*>();
+
+    commandQueue.push(new HolonomicDeadReckon(drive, 30, 0, 30, 1000));
+}
+
 void deviceInit() {
     pros::delay(1000);	// Allow time for devices to initialize
 	odom.reset();
@@ -72,4 +85,6 @@ void deviceInit() {
 void opcontrolInit() {
 }
 
-void robotInit() { deviceInit(); }
+void robotInit() { 
+    deviceInit(); 
+}

@@ -15,7 +15,20 @@ void initialize() { robotInit(); }
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+	// isAutonomousRunning = false;
+
+	// // Remove failsafe FIRST so it cannot dereference the runner mid-free.
+	// if (failsafeTask != nullptr) {
+	// 	failsafeTask->remove();
+	// 	delete failsafeTask;
+	// 	failsafeTask = nullptr;
+	// }
+	if (activeCommandRunner != nullptr) {
+		delete activeCommandRunner;
+		activeCommandRunner = nullptr;
+	}
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -39,7 +52,46 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	populateAutonQueue();
+
+	// if (!startPose.has_value()) {
+	// 	throw std::runtime_error("startPose not set for autonomous routine");
+	// }
+	// odom.setPose(startPose.value());
+
+	activeCommandRunner = new CommandRunner(commandQueue);
+
+	// if (!(autonType == 1)) { // NOT SKILLS
+	// 	isAutonomousRunning = true;
+
+	// 	failsafeTask = new pros::Task([]() {
+	// 		pose_t pose;
+	// 		while (isAutonomousRunning) {
+	// 			odom.getPose(&pose);
+	// 			if (pose.y >= 60.0 && activeCommandRunner != nullptr) {
+	// 				activeCommandRunner->stop();
+	// 				printf("Failsafe triggered: y = %f\n", pose.y);
+	// 				break;
+	// 			}
+	// 			pros::delay(20);
+	// 		}
+	// 	});
+	// }
+
+	activeCommandRunner->run();
+	// isAutonomousRunning = false;
+
+	// Clean-exit cleanup: let the failsafe loop observe the flag and exit,
+	// then tear it down before freeing the runner.
+	// if (failsafeTask != nullptr) {
+	// 	failsafeTask->join();
+	// 	delete failsafeTask;
+	// 	failsafeTask = nullptr;
+	// }
+	delete activeCommandRunner;
+	activeCommandRunner = nullptr;
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
