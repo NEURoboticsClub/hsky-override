@@ -25,14 +25,14 @@ HskyController controller(pros::E_CONTROLLER_MASTER);
 
 //===================== CONFIG =====================
 robot_specs_t robotSpecs = {
-    .driveWheelDiameter = 2.5,  // inches
+    .driveWheelDiameter = 2.75,  // inches
     .trackWidth = 10.0,		   // inches
     .odomGearRatio = 0.9258,  // Tuning constant
-    .maxDrivePct = 100,
-    .maxTurnPct = 100,
-    .fwdPID = new PIDFController(0.5, 0.0, 0.1, 0.0, PIDFController::ERROR_TYPE::LINEAR),
-    .strafePID = new PIDFController(0.5, 0.0, 0.1, 0.0, PIDFController::ERROR_TYPE::LINEAR),
-    .turnPID = new PIDFController(2.5, 0.0, 0.2, 0.0, PIDFController::ERROR_TYPE::ANGULAR),
+    .maxDrivePct = 50,
+    .maxTurnPct = 50,
+    .fwdPID = new PIDFController(5.0, 0.0, 0.0, 0.0, PIDFController::ERROR_TYPE::LINEAR),
+    .strafePID = new PIDFController(5.0, 0.0, 0.0, 0.0, PIDFController::ERROR_TYPE::LINEAR),
+    .turnPID = new PIDFController(1.0, 0.0, 0.0, 0.0, PIDFController::ERROR_TYPE::ANGULAR),
 };
 
 
@@ -71,7 +71,9 @@ void populateAutonQueue() {
     // Test auton
     commandQueue = std::queue<Command*>();
 
-    commandQueue.push(new HolonomicDeadReckon(drive, 30, 0, 30, 1000));
+    commandQueue.push(new DriveToPoint(drive, odom, *robotSpecs.fwdPID, *robotSpecs.strafePID, *robotSpecs.turnPID, 
+        pose_t(24, 24, 0), 2, 5.0 * DEG_TO_RAD, 2000, robotSpecs.maxDrivePct));
+    commandQueue.push(new InstantCommand([]() { std::cout << "Instant command executed." << std::endl; }));
 }
 
 void deviceInit() {
