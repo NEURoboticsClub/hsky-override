@@ -71,13 +71,14 @@ void populateAutonQueue() {
     // Test auton
     commandQueue = std::queue<Command*>();
 
-    // commandQueue.push(new DriveToPoint(drive, odom, *robotSpecs.fwdPID, *robotSpecs.strafePID, *robotSpecs.turnPID, 
-    //     pose_t(24, 0, 0), 2, 5.0 * DEG_TO_RAD, 2000, robotSpecs.maxDrivePct));
-    commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, 90.0, 5000, robotSpecs.maxTurnPct));
-    commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, -90.0, 5000, robotSpecs.maxTurnPct));
-    commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, 0.0, 5000, robotSpecs.maxTurnPct));
-    commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, 45.0, 5000, robotSpecs.maxTurnPct));
+    commandQueue.push(new DriveToPoint(drive, odom, *robotSpecs.fwdPID, *robotSpecs.strafePID, *robotSpecs.turnPID, 
+        pose_t(24, 0, 0), 2, 5.0 * DEG_TO_RAD, 2000, robotSpecs.maxDrivePct));
+    // commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, 90.0, 5000, robotSpecs.maxTurnPct));
+    // commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, -90.0, 5000, robotSpecs.maxTurnPct));
+    // commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, 0.0, 5000, robotSpecs.maxTurnPct));
+    // commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, 45.0, 5000, robotSpecs.maxTurnPct));
     commandQueue.push(new InstantCommand([]() { std::cout << "Instant command executed." << std::endl; }));
+    commandQueue.push(new TimeoutCommand(100000));
 }
 
 void deviceInit() {
