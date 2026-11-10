@@ -32,7 +32,7 @@ robot_specs_t robotSpecs = {
     .maxTurnPct = 50,
     .fwdPID = new PIDFController(5.0, 0.0, 0.0, 0.0, PIDFController::ERROR_TYPE::LINEAR),
     .strafePID = new PIDFController(5.0, 0.0, 0.0, 0.0, PIDFController::ERROR_TYPE::LINEAR),
-    .turnPID = new PIDFController(1.0, 0.0, 0.0, 0.0, PIDFController::ERROR_TYPE::ANGULAR),
+    .turnPID = new PIDFController(30.0, 0.0, 0.0, 8.0, PIDFController::ERROR_TYPE::ANGULAR),
 };
 
 
@@ -71,8 +71,12 @@ void populateAutonQueue() {
     // Test auton
     commandQueue = std::queue<Command*>();
 
-    commandQueue.push(new DriveToPoint(drive, odom, *robotSpecs.fwdPID, *robotSpecs.strafePID, *robotSpecs.turnPID, 
-        pose_t(24, 24, 0), 2, 5.0 * DEG_TO_RAD, 2000, robotSpecs.maxDrivePct));
+    // commandQueue.push(new DriveToPoint(drive, odom, *robotSpecs.fwdPID, *robotSpecs.strafePID, *robotSpecs.turnPID, 
+    //     pose_t(24, 0, 0), 2, 5.0 * DEG_TO_RAD, 2000, robotSpecs.maxDrivePct));
+    commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, 90.0, 5000, robotSpecs.maxTurnPct));
+    commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, -90.0, 5000, robotSpecs.maxTurnPct));
+    commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, 0.0, 5000, robotSpecs.maxTurnPct));
+    commandQueue.push(new HolonomicTurn(drive, odom, *robotSpecs.turnPID, 45.0, 5000, robotSpecs.maxTurnPct));
     commandQueue.push(new InstantCommand([]() { std::cout << "Instant command executed." << std::endl; }));
 }
 
